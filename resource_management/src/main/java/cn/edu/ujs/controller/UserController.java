@@ -27,8 +27,9 @@ import java.util.Map;
 @RequestMapping(value = "/users")
 public class UserController {
 
+    //打印日志
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-
+    
     @Autowired
     private UserService userService;
 

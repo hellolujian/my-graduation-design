@@ -13,12 +13,10 @@ spring:
     multipart:
       max-file-size: 1000Mb
       max-request-size: 1000Mb
-
 server:
   port: 8082
 mybatis:
   type-handlers-package: cn.edu.ujs.typehandler
-
 #pagehelper分页插件配置
 pagehelper:
   helper-dialect: mysql
