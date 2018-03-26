@@ -30,6 +30,16 @@ public interface ResourceService {
     /**资源列表*/
     public List<ResourceVO> findAll();
 
+    /**分页查询*/
+    public List<ResourceVO> findByPage(Integer parentCategoryId,
+                                     Integer childCategoryId,
+                                     Integer resourceTypeId,
+                                     Integer checkStatus,
+                                     Integer sortType,
+                                     String keyword,
+                                     Integer pageNum,
+                                     Integer pageSize);
+
     /**审核状态的资源列表*/
     public List<ResourceVO> findAll(Integer checkStatus);
 

@@ -1,9 +1,11 @@
 package cn.edu.ujs.service.impl;
 
 import cn.edu.ujs.VO.ResourceVO;
+import cn.edu.ujs.VO.ResultVO;
 import cn.edu.ujs.entity.Resource;
 import cn.edu.ujs.mapper.ResourceMapper;
 import cn.edu.ujs.service.ResourceService;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanMap;
 import org.springframework.stereotype.Service;
@@ -79,6 +81,21 @@ public class ResourceServiceImpl implements ResourceService {
     public List<ResourceVO> findAll() {
 
         List<ResourceVO> resourceVOList = resourceMapper.findAllOrderByUpdateTime();
+        return resourceVOList;
+    }
+
+    @Override
+    public List<ResourceVO> findByPage(Integer parentCategoryId,
+                                     Integer childCategoryId,
+                                     Integer resourceTypeId,
+                                     Integer checkStatus,
+                                     Integer sortType,
+                                     String keyword,
+                                     Integer pageNum,
+                                     Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<ResourceVO> resourceVOList = resourceMapper.findAllByMultiCondition(parentCategoryId,
+                childCategoryId, resourceTypeId, checkStatus, sortType, keyword);
         return resourceVOList;
     }
 

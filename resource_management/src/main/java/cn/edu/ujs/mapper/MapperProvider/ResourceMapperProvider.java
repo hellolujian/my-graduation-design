@@ -24,7 +24,7 @@ public class ResourceMapperProvider {
      */
     private static String prefixSql = "select r.id,r.resource_title,concat(r.resource_title,r.resource_suffix_name) as name,r.description,ifnull(d.downloads,0)as downloads," +
             "r.resource_size,r.resource_suffix_name,s.suffix_image,r.resource_position,r.points,t.type_name as type,r.update_time," +
-            "r.check_status,u.username,r.tag_list,r.create_time,r.update_time,concat_ws('/',p.parent_category_name,c.child_category_name) as category " +
+            "r.check_status,u.username,r.tag_list,r.create_time,concat_ws('/',p.parent_category_name,c.child_category_name) as category " +
             "from resource r left join " +
             "(select resource_id,count(user_id)as downloads from download group by resource_id) d " +
             "on r.id=d.resource_id " +

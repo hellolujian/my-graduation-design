@@ -7,6 +7,10 @@ import cn.edu.ujs.enums.ResourceEnum;
 import cn.edu.ujs.service.CommonService;
 import cn.edu.ujs.service.ResourceService;
 import cn.edu.ujs.util.ResultVOUtil;
+import com.github.pagehelper.PageHelper;
+import com.sun.xml.internal.ws.api.config.management.Reconfigurable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.IntroductionInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ResourceUtils;
@@ -24,6 +28,7 @@ import java.util.List;
 @RequestMapping(value = "/resources")
 public class ResourceController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ResourceController.class);
     // TODO: 2018/3/19 增加用户日志，记录都有哪些操作 
     @Autowired
     private ResourceService resourceService;
@@ -38,13 +43,25 @@ public class ResourceController {
                                     @RequestParam(value = "resourceTypeId", required = false) Integer resourceTypeId,
                                     @RequestParam(value = "checkStatus", required = false) Integer checkStatus,
                                     @RequestParam(value = "sortType", required = false) Integer sortType,
-                                    @RequestParam(value = "keyword", required = false) String keyword) {
+                                    @RequestParam(value = "keyword", required = false) String keyword,
+                                    @RequestParam(value = "pageNum", required = false) Integer pageNum,
+                                    @RequestParam(value = "pageSize", required = false) Integer pageSize) {
 
-        List<ResourceVO> resourceVOList = resourceService.findAll(parentCategoryId,
-                childCategoryId, resourceTypeId, checkStatus,sortType,keyword);
+        List<ResourceVO> resourceVOList;
+        if (pageNum != null && pageSize != null) {
+            logger.info("pageNum:{},pageSize:{}",pageNum,pageSize);
+            resourceVOList = resourceService.findByPage(parentCategoryId,
+                    childCategoryId, resourceTypeId, checkStatus, sortType, keyword, pageNum, pageSize);
+
+        } else {
+            logger.info("pageNum&pageSize:null");
+            resourceVOList = resourceService.findAll(parentCategoryId,
+                    childCategoryId, resourceTypeId, checkStatus,sortType,keyword);
+        }
         ResultVO resultVO = ResultVOUtil.success(resourceVOList);
         return resultVO;
     }
+
 
     //前台获取资源列表（审核通过的）
     @GetMapping(value = "/check")
