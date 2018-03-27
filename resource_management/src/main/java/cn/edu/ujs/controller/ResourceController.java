@@ -19,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by DELL on 2018/3/3.
@@ -59,6 +61,23 @@ public class ResourceController {
                     childCategoryId, resourceTypeId, checkStatus,sortType,keyword);
         }
         ResultVO resultVO = ResultVOUtil.success(resourceVOList);
+        return resultVO;
+    }
+
+    @GetMapping(value = "/2")
+    public ResultVO getAllResources2(@RequestParam(value = "parentCategoryId", required = false) Integer parentCategoryId,
+                                    @RequestParam(value = "childCategoryId", required = false) Integer childCategoryId,
+                                    @RequestParam(value = "resourceTypeId", required = false) Integer resourceTypeId,
+                                    @RequestParam(value = "checkStatus", required = false) Integer checkStatus,
+                                    @RequestParam(value = "sortType", required = false) Integer sortType,
+                                    @RequestParam(value = "keyword", required = false) String keyword,
+                                    @RequestParam(value = "pageNum", required = false) Integer pageNum,
+                                    @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+
+        Map<String,Object> map = new HashMap<>();
+        map = resourceService.findByPage2(parentCategoryId,
+                childCategoryId, resourceTypeId, checkStatus, sortType, keyword, pageNum, pageSize);
+        ResultVO resultVO = ResultVOUtil.success(map);
         return resultVO;
     }
 

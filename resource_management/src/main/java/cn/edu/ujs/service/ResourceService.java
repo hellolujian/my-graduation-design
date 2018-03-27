@@ -6,6 +6,7 @@ import cn.edu.ujs.entity.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by DELL on 2018/3/1.
@@ -40,6 +41,15 @@ public interface ResourceService {
                                      Integer pageNum,
                                      Integer pageSize);
 
+    /**分页查询*/
+    public Map<String,Object> findByPage2(Integer parentCategoryId,
+                           Integer childCategoryId,
+                           Integer resourceTypeId,
+                           Integer checkStatus,
+                           Integer sortType,
+                           String keyword,
+                           Integer pageNum,
+                           Integer pageSize);
     /**审核状态的资源列表*/
     public List<ResourceVO> findAll(Integer checkStatus);
 

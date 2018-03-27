@@ -3,9 +3,11 @@ package cn.edu.ujs.service.impl;
 import cn.edu.ujs.VO.ResourceVO;
 import cn.edu.ujs.VO.ResultVO;
 import cn.edu.ujs.entity.Resource;
+import cn.edu.ujs.entity.User;
 import cn.edu.ujs.mapper.ResourceMapper;
 import cn.edu.ujs.service.ResourceService;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanMap;
 import org.springframework.stereotype.Service;
@@ -97,6 +99,27 @@ public class ResourceServiceImpl implements ResourceService {
         List<ResourceVO> resourceVOList = resourceMapper.findAllByMultiCondition(parentCategoryId,
                 childCategoryId, resourceTypeId, checkStatus, sortType, keyword);
         return resourceVOList;
+
+    }
+
+    @Override
+    public Map<String, Object> findByPage2(Integer parentCategoryId,
+                                           Integer childCategoryId,
+                                           Integer resourceTypeId,
+                                           Integer checkStatus,
+                                           Integer sortType,
+                                           String keyword,
+                                           Integer pageNum,
+                                           Integer pageSize) {
+// TODO: 2018/3/27 可以把数量的字段也放入resultVO中 
+        Map<String,Object> map = new HashMap<>();
+        PageHelper.startPage(pageNum,pageSize,true);
+        List<ResourceVO> resourceVOList = resourceMapper.findAllByMultiCondition(parentCategoryId,
+                childCategoryId, resourceTypeId, checkStatus, sortType, keyword);
+        PageInfo pageInfo = new PageInfo(resourceVOList);
+        map.put("data",resourceVOList);
+        map.put("total",pageInfo.getTotal());
+        return map;
     }
 
     @Override

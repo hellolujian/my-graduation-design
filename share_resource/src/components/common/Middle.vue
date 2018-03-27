@@ -7,7 +7,8 @@
                 v-bind:class="[(index == 0) ? 'category-btn-first' : '', 
                                 (index == (categoryData.length-1)) ? 'category-btn-last' : '', 
                                 'category-btn']"
-                @mouseover.native="getChildCategoryData(index)">
+                @mouseover.native="getChildCategoryData(index)"
+                @click="parentCategoryClick(item.id)">
                 {{item.parentCategoryName}}
                 <i style="float:right;" class="el-icon-arrow-right el-icon--right"></i>
             </el-button>
@@ -17,7 +18,8 @@
             <el-button
                 v-for="(item,index) in childCategoryData" 
                 :key="index"
-                class="childCategory">{{item.childCategoryName}}
+                class="childCategory"
+                @click="childCategoryClick(item.id)">{{item.childCategoryName}}
             </el-button>
         </el-card>
         <el-main class="main">
@@ -58,12 +60,16 @@
 
 <script>
     import {getRequest} from '../../utils/api';
+    import store from "@/store/store.js";
+    import {mapState,mapMutations} from 'vuex';
     export default {
+        store,
         data() {
             return {
                 getCategoryUrl: '/category/',
                 categoryData: [],
                 childCategoryData: [],
+                parentCategoryId: 0, //保存子分类的父类别id
                 getHotTagUrl: '/tags/',
                 tagList: [],
             }
@@ -73,6 +79,11 @@
             this.getHotTagData()
         },
         methods: {
+            ...mapMutations([
+                'changeParentCategoryId',
+                'changeChildCategoryId',
+                'changeChildCategoryData',
+            ]),
             //获取父分类数据
             getCategoryData() {
                 getRequest(this.getCategoryUrl).then(response => {
@@ -82,6 +93,7 @@
             },
             //获得哪个分类
             getChildCategoryData(index) {
+                this.parentCategoryId = this.categoryData[index].id;
                 this.childCategoryData = this.categoryData[index].childCategoryList;
             },
             //获取标签数据
@@ -89,8 +101,35 @@
                 getRequest(this.getHotTagUrl).then(response => {
                     this.tagList = response.data.data;
                 })
-                
             },
+            parentCategoryClick(parentCategoryId) {
+                this.$router.push({
+                    name: 'searchResource',
+                    params: {
+                        parentCategoryId:parentCategoryId,
+                        childCategoryId: 0,
+                        typeId: 0,
+                    }
+                }),
+                this.changeParentCategoryId(parentCategoryId);
+                this.changeChildCategoryId(null);
+                this.changeChildCategoryData(this.childCategoryData);
+            },
+            childCategoryClick(childCategoryId) {
+                
+                this.$router.push({
+                    name: 'searchResource',
+                    params: {
+                        parentCategoryId:this.parentCategoryId,
+                        childCategoryId: childCategoryId,
+                        typeId: 0,
+                        data: this.childCategoryData
+                    }
+                });
+                this.changeChildCategoryId(childCategoryId);
+                this.changeParentCategoryId(this.parentCategoryId);
+                this.changeChildCategoryData(this.childCategoryData);
+            }
         }
 }
 </script>

@@ -23,7 +23,7 @@ export const postRequest = (url, params) => {
 export const getRequest = (url,params) => {
     return axios({
       method: 'get',
-      data:params,
+      params: params,
       transformRequest: [function (data) {
         let ret = ''
         for (let it in data) {
