@@ -77,7 +77,7 @@ public class UserController {
     //用户注册
 
     //用户登录
-    @PostMapping(value = "/login")
+    @RequestMapping(value = "/login")
     public ResultVO login(@RequestParam(value = "username") String username,
                           @RequestParam(value = "password") String password,
                           HttpServletRequest httpServletRequest) {
@@ -86,6 +86,7 @@ public class UserController {
         User user = userService.login(username, password);
         if (user != null) {
             resultVO = ResultVOUtil.success(user);
+            logger.info("userInfo:{}",resultVO);
             // TODO: 2018/3/6 记录session信息
             session.setAttribute("userId", user.getId());
             session.setMaxInactiveInterval(100);

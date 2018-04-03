@@ -28,6 +28,9 @@ public interface ResourceService {
     /**根据id查找，返回resourceVOid*/
     public ResourceVO getOneResourceVO(Integer resourceId);
 
+    /**返回某个资源的详细信息*/
+    public ResourceVO getOneResourceDetail(Integer resourceId);
+
     /**资源列表*/
     public List<ResourceVO> findAll();
 
@@ -62,7 +65,10 @@ public interface ResourceService {
                                     String keyword);
 
     /**查询某个用户上传资源列表*/
-    public List<ResourceVO> findResourcesByUserId(Integer userId);
+    public List<ResourceVO> findResourcesByUserId(Integer userId, Integer checkStatus);
+
+    /**查询某个用户审核通过的资源数量*/
+    public Integer getResourceCountByUserId(Integer userId);
 
     /**判断该资源是否为某用户上传*/
     public boolean isUserUpload(Integer userId, Integer resourceId);

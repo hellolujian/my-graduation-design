@@ -38,7 +38,7 @@ public interface RemarkMapper {
     Integer getContentAmount(Integer resourceId);
 
     //获取综合评分
-    @Select("select format(avg(score),1) from remark where resource_id=#{resourceId}")
+    @Select("select ifNull(format(avg(score),1),0) as averageScore from remark where resource_id=#{resourceId}")
     Double getAverageScore(Integer resourceId);
 
     //查询某个用户是否已评价某资源

@@ -6,13 +6,15 @@ Vue.use(Vuex);
 
 const state = {
     count: 1,
-    parentCategoryId: null,
-    childCategoryId: null,
+    parentCategoryId: 0,
+    childCategoryId: 0,
     childCategoryData: [],
-    typeId: null,
+    typeId: 0,
     checkStatus: 1,
     sortType: 0, //0默认排序，1最新上传，2组多下载
     keyword: null,
+    searchResult: [],
+    searchResultTotal: 0,
 };
 const mutations = {
     /**/
@@ -37,6 +39,12 @@ const mutations = {
     },
     changeTypeId(state,newTypeId) {
         state.typeId = newTypeId;
+    },
+    changeSearchResult(state,newSearchResult) {
+        state.searchResult = newSearchResult;
+    },
+    changeSearchResultTotal(state,newSearchResultTotal) {
+        state.searchResultTotal = newSearchResultTotal;
     }
 };
 var vuexStore = new Vuex.Store({

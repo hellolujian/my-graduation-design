@@ -19,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by DELL on 2018/3/4.
@@ -40,6 +42,9 @@ public class CommonServiceImpl implements CommonService {
 
     @Autowired
     private DownloadService downloadService;
+
+    @Autowired
+    private RemarkService remarkService;
 
     @Override
     public ResultVO downloadResource(Integer userId,
@@ -154,6 +159,23 @@ public class CommonServiceImpl implements CommonService {
         List<ResourceVO> resourceVOList = getResourceByIdList(resourceIdList);
         ResultVO resultVO = ResultVOUtil.success(resourceIdList);
         return resultVO;
+    }
+
+    @Override
+    public Map<String, Object> getOneResource(Integer resourceId) {
+
+        Map<String,Object> map = new HashMap<>();
+        ResourceVO resourceVO = resourceService.getOneResourceDetail(resourceId);
+        Integer contentAmount = remarkService.getContentAmount(resourceId);
+        Integer scoreAmount =remarkService.getScoreAmount(resourceId);
+        Double averageScore = remarkService.getAverageScore(resourceId);
+        Integer collectAmount = collectionService.getCollectionAmount(resourceId);
+        map.put("data",resourceVO);
+        map.put("contentAmount",contentAmount);
+        map.put("scoreAmount",scoreAmount);
+        map.put("averageScore",averageScore);
+        map.put("collectAmount",collectAmount);
+        return map;
     }
 
     private List<ResourceVO> getResourceByIdList(List<Integer> resourceIdList) {

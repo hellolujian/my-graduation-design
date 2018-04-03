@@ -5,6 +5,7 @@ import cn.edu.ujs.entity.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * Created by DELL on 2018/3/3.
@@ -26,4 +27,7 @@ public interface CommonService {
 
     /**获取某个用户的下载列表*/
     public ResultVO userDownloads(Integer userId);
+
+    /**获取单个资源的详细信息*/
+    public Map<String,Object> getOneResource(Integer resourceId);
 }

@@ -109,10 +109,10 @@
                         parentCategoryId:parentCategoryId,
                         childCategoryId: 0,
                         typeId: 0,
+                        data: this.childCategoryData
                     }
                 }),
                 this.changeParentCategoryId(parentCategoryId);
-                this.changeChildCategoryId(null);
                 this.changeChildCategoryData(this.childCategoryData);
             },
             childCategoryClick(childCategoryId) {

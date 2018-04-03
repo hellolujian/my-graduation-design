@@ -4,6 +4,7 @@ import cn.edu.ujs.VO.RemarkVO;
 import cn.edu.ujs.entity.Remark;
 import cn.edu.ujs.mapper.RemarkMapper;
 import cn.edu.ujs.service.RemarkService;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,14 @@ public class RemarkServiceImpl implements RemarkService {
     public List<RemarkVO> findRemarkByResourceId(Integer resourceId) {
 
         return remarkMapper.findRemarkByResourceId(resourceId);
+    }
+
+    @Override
+    public List<RemarkVO> findRemarkByPage(Integer resourceId, Integer pageNum, Integer pageSize) {
+
+        PageHelper.startPage(pageNum,pageSize);
+        List<RemarkVO> remarkVOList = remarkMapper.findRemarkByResourceId(resourceId);
+        return remarkVOList;
     }
 
     @Override

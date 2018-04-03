@@ -29,6 +29,16 @@ public class RemarkController {
         return resultVO;
     }
 
+    //分页获取评价列表
+    @GetMapping(value = "/page/resourceId/{resourceId}")
+    public ResultVO getRemarksByPage(@PathVariable("resourceId") Integer resourceId,
+                                     @RequestParam("pageSize") Integer pageSize,
+                                     @RequestParam("pageNum") Integer pageNum) {
+        List<RemarkVO> remarkVOList = remarkService.findRemarkByPage(resourceId, pageNum, pageSize);
+        ResultVO resultVO = ResultVOUtil.success(remarkVOList);
+        return resultVO;
+    }
+
     //获取某个资源的评分个数
     @GetMapping(value = "/scoreAmount/resourceId/{resourceId}")
     public ResultVO getScoreAmount(@PathVariable(value = "resourceId") Integer resourceId) {
@@ -57,7 +67,7 @@ public class RemarkController {
     }
 
     //判断某个用户是否评价某资源
-    @GetMapping(value = "/userId/{userId}/resourceId/{resourceId}")
+    @GetMapping(value = "/user/{userId}/resource/{resourceId}")
     public ResultVO isUserRemark(@PathVariable(value = "userId") Integer userId,
                                  @PathVariable(value = "resourceId") Integer resourceId) {
 

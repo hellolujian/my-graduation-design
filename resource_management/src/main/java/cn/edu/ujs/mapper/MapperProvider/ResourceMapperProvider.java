@@ -1,6 +1,7 @@
 package cn.edu.ujs.mapper.MapperProvider;
 
 import cn.edu.ujs.entity.Resource;
+import cn.edu.ujs.enums.SortEnum;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,6 +35,13 @@ public class ResourceMapperProvider {
             "left join parent_category p on c.parent_category_id = p.id " +
             "left join resource_type t on r.resource_type_id=t.id where 1=1";
 
+    public String oneResourceQuery(@Param("resourceId") Integer resourceId) {
+
+        StringBuffer sql = new StringBuffer(prefixSql);
+        sql.append(" and r.id=#{resourceId}");
+        return sql.toString();
+    }
+
     //多条件查询的SQL语句
     public String multiConditionalQuery(@Param("parentCategoryId") Integer parentCategoryId,
                                         @Param("childCategoryId") Integer childCategoryId,
@@ -43,22 +51,26 @@ public class ResourceMapperProvider {
                                         @Param("keyword") String keyword) {
 
         StringBuffer sql = new StringBuffer(prefixSql);
-        if (parentCategoryId != null)
+        if (parentCategoryId != null && parentCategoryId !=0)
             sql.append(" and c.parent_category_id=#{parentCategoryId}");
-        if (childCategoryId != null)
+        if (childCategoryId != null && childCategoryId != 0)
             sql.append(" and r.resource_category_id=#{childCategoryId}");
-        if (resourceTypeId != null)
+        if (resourceTypeId != null && resourceTypeId != 0)
             sql.append(" and r.resource_type_id=#{resourceTypeId}");
         if (checkStatus != null)
             sql.append(" and check_status=#{checkStatus}");
-        if (keyword != null)
-            sql.append(" and r.resource_title like CONCAT('%',#{keyword},'%') or r.description like CONCAT('%',#{keyword},'%')");
+        if (keyword != null && !keyword.isEmpty())
+            sql.append(" and (r.resource_title like CONCAT('%',#{keyword},'%') or r.description like CONCAT('%',#{keyword},'%') or JSON_SEARCH(tag_list,'all',CONCAT('%',#{keyword},'%')) is not null)");
         //排序方式，0默认排序，1最新上传，2最多下载
         if (sortType != null) {
-            if (sortType == 1)
+            if (sortType == SortEnum.SORT_LATEST.getCode())
                 sql.append(" order by update_time desc");
-            else if (sortType == 2)
+            else if (sortType == SortEnum.SORT_MOST_DOWNLOAD.getCode())
                 sql.append(" order by downloads desc");
+            else if (sortType == SortEnum.SORT_CODE.getCode()) {
+
+            }
+
         }
 
         return sql.toString();
@@ -126,9 +138,12 @@ public class ResourceMapperProvider {
         return sql.toString();
     }
 
-    public String findByUserId(Integer userId) {
+    public String findByUserId(@Param(value = "userId") Integer userId,
+                               @Param(value = "checkStatus") Integer checkStatus) {
 
         StringBuffer sql = new StringBuffer(prefixSql);
+        if (checkStatus != null)
+            sql.append(" and r.check_status=#{checkStatus}");
         sql.append(" and r.user_id=#{userId}");
         return sql.toString();
     }

@@ -44,7 +44,8 @@ public class DownloadServiceImpl implements DownloadService {
     public boolean isUserDownload(Integer userId, Integer resourceId) {
 
         Integer result = downloadMapper.findDownByuserIdAndResourceId(userId, resourceId);
-        if (result == 1)
+        //是可以重复下载的，所以记录可能大于一
+        if (result >= 1)
             return true;
         return false;
     }

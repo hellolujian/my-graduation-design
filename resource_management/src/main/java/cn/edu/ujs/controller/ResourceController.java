@@ -48,15 +48,15 @@ public class ResourceController {
                                     @RequestParam(value = "keyword", required = false) String keyword,
                                     @RequestParam(value = "pageNum", required = false) Integer pageNum,
                                     @RequestParam(value = "pageSize", required = false) Integer pageSize) {
-
+        logger.info("parentCategoryId:{},childCategoryId:{},resourceTypeId:{},checkStatus:{},sortType:{},keyword:{}",parentCategoryId,childCategoryId,resourceTypeId,checkStatus,sortType,keyword);
         List<ResourceVO> resourceVOList;
         if (pageNum != null && pageSize != null) {
-            logger.info("pageNum:{},pageSize:{}",pageNum,pageSize);
+            //logger.info("pageNum:{},pageSize:{}",pageNum,pageSize);
             resourceVOList = resourceService.findByPage(parentCategoryId,
                     childCategoryId, resourceTypeId, checkStatus, sortType, keyword, pageNum, pageSize);
 
         } else {
-            logger.info("pageNum&pageSize:null");
+            //logger.info("pageNum&pageSize:null");
             resourceVOList = resourceService.findAll(parentCategoryId,
                     childCategoryId, resourceTypeId, checkStatus,sortType,keyword);
         }
@@ -74,10 +74,12 @@ public class ResourceController {
                                     @RequestParam(value = "pageNum", required = false) Integer pageNum,
                                     @RequestParam(value = "pageSize", required = false) Integer pageSize) {
 
+        logger.info("parentCategoryId:{},childCategoryId:{},resourceTypeId:{},checkStatus:{},sortType:{},keyword:{}",parentCategoryId,childCategoryId,resourceTypeId,checkStatus,sortType,keyword);
         Map<String,Object> map = new HashMap<>();
         map = resourceService.findByPage2(parentCategoryId,
                 childCategoryId, resourceTypeId, checkStatus, sortType, keyword, pageNum, pageSize);
         ResultVO resultVO = ResultVOUtil.success(map);
+        logger.info("result:{}",map);
         return resultVO;
     }
 
@@ -100,6 +102,15 @@ public class ResourceController {
         Resource resource = resourceService.findByResourceId(resourceId);
         ResultVO resultVO = ResultVOUtil.success(resource);
         return resultVO;
+    }
+
+    //获取某个资源的详细信息
+    @GetMapping(value = "/detail/{resourceId}")
+    public ResultVO getResourceDetail(@PathVariable(value = "resourceId") Integer resourceId) {
+
+        Map<String,Object> map = commonService.getOneResource(resourceId);
+        ResultVO resourceVO = ResultVOUtil.success(map);
+        return resourceVO;
     }
 
     //上传资源
@@ -180,10 +191,20 @@ public class ResourceController {
 
     //获取某个用户的资源列表
     @GetMapping(value = "/userId/{userId}")
-    public ResultVO getResourcesByUserId(@RequestParam(value = "userId") Integer userId) {
+    public ResultVO getResourcesByUserId(@PathVariable(value = "userId") Integer userId,
+                                         @RequestParam(value = "checkStatus", required = false) Integer checkStatus) {
 
-        List<ResourceVO> resourceVOList = resourceService.findResourcesByUserId(userId);
+        List<ResourceVO> resourceVOList = resourceService.findResourcesByUserId(userId,checkStatus);
         ResultVO resultVO = ResultVOUtil.success(resourceVOList);
+        return resultVO;
+    }
+
+    //获取某个用户上传的资源数量（审核通过）
+    @GetMapping(value = "/count/userId/{userId}")
+    public ResultVO getUserResourceCount(@PathVariable(value = "userId") Integer userId) {
+
+        Integer result = resourceService.getResourceCountByUserId(userId);
+        ResultVO resultVO = ResultVOUtil.success(result);
         return resultVO;
     }
 

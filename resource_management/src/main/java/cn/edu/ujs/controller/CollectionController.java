@@ -59,4 +59,14 @@ public class CollectionController {
             resultVO = ResultVOUtil.error();
         return resultVO;
     }
+
+    //判断某个用户是否收藏了某个资源
+    @GetMapping(value = "user/{userId}/resource/{resourceId}")
+    public ResultVO isUserCollect(@PathVariable("resourceId") Integer resourceId,
+                                  @PathVariable("userId") Integer userId) {
+
+        boolean result = collectionService.isUserCollect(userId,resourceId);
+        ResultVO resultVO = ResultVOUtil.success(result);
+        return resultVO;
+    }
 }

@@ -80,6 +80,12 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
+    public ResourceVO getOneResourceDetail(Integer resourceId) {
+
+        return resourceMapper.getOneResourceDetail(resourceId);
+    }
+
+    @Override
     public List<ResourceVO> findAll() {
 
         List<ResourceVO> resourceVOList = resourceMapper.findAllOrderByUpdateTime();
@@ -143,10 +149,17 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public List<ResourceVO> findResourcesByUserId(Integer userId) {
+    public List<ResourceVO> findResourcesByUserId(Integer userId, Integer checkStatus) {
 
-        List<ResourceVO> resourceVOList = resourceMapper.findResourcesByUserId(userId);
+        List<ResourceVO> resourceVOList = resourceMapper.findResourcesByUserId(userId,checkStatus);
         return resourceVOList;
+    }
+
+    @Override
+    public Integer getResourceCountByUserId(Integer userId) {
+
+        Integer result = resourceMapper.getResourceCountByUserId(userId);
+        return result;
     }
 
     @Override

@@ -17,6 +17,9 @@ public interface RemarkService {
     /**查询某个资源的评价列表*/
     public List<RemarkVO> findRemarkByResourceId(Integer resourceId);
 
+    /**分页查询评价*/
+    public List<RemarkVO> findRemarkByPage(Integer resourceId, Integer pageNum, Integer pageSize);
+
     /**获取评分个数*/
     public Integer getScoreAmount(Integer resourceId);
 

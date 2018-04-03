@@ -30,6 +30,16 @@ public class DownloadController {
         return resultVO;
     }
 
+    //判断某个用户是否下载某资源
+    @GetMapping(value = "user/{userId}/resource/{resourceId}")
+    public ResultVO isUserDownload(@PathVariable(value = "userId") Integer userId,
+                                   @PathVariable(value = "resourceId") Integer resourceId) {
+
+        boolean result = downloadService.isUserDownload(userId, resourceId);
+        ResultVO resultVO = ResultVOUtil.success(result);
+        return resultVO;
+    }
+
     //添加下载记录
     @PostMapping(value = "/addDownload")
     public ResultVO addDownload(@RequestParam(value = "userId") Integer userId,

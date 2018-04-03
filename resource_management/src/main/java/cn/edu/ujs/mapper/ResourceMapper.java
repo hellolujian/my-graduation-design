@@ -4,6 +4,7 @@ import cn.edu.ujs.VO.ResourceVO;
 import cn.edu.ujs.VO.ResultVO;
 import cn.edu.ujs.entity.Resource;
 import cn.edu.ujs.mapper.MapperProvider.ResourceMapperProvider;
+import com.sun.deploy.model.ResourceProvider;
 import lombok.experimental.Delegate;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
@@ -68,6 +69,7 @@ public interface ResourceMapper {
     @Select("select * from resource where id=#{resourceId}")
     @Results(id = "resourceVOMap", value = {
             @Result(column = "id", property = "id"),
+            @Result(column = "user_id", property = "userId"),
             @Result(column = "resource_title", property = "title"),
             @Result(column = "downloads", property = "downloads"),
             @Result(column = "resource_suffix_name", property = "suffixName"),
@@ -83,6 +85,10 @@ public interface ResourceMapper {
             @Result(column = "update_time", property = "updateTime")
     })
     ResourceVO getOneResourceVO(Integer resourceId);
+
+    @SelectProvider(type = ResourceMapperProvider.class, method = "oneResourceQuery")
+    @ResultMap("resourceVOMap")
+    ResourceVO getOneResourceDetail(Integer resourceId);
 
     //查询所有资源(最新)
     @Select("select r.id,r.resource_title,r.description,ifnull(d.downloads,0)as downloads," +
@@ -131,6 +137,11 @@ public interface ResourceMapper {
     //根据user_id查询
     @SelectProvider(type = ResourceMapperProvider.class, method = "findByUserId")
     @ResultMap("resourceVOMap")
-    List<ResourceVO> findResourcesByUserId(Integer userId);
+    List<ResourceVO> findResourcesByUserId(@Param(value = "userId") Integer userId,
+                                           @Param(value = "checkStatus") Integer checkStatus);
+
+    //根据user_id查询资源数量
+    @Select("select count(*) as count from resource where user_id=#{userId} and check_status=1")
+    Integer getResourceCountByUserId(@Param("userId") Integer userId);
 
 }
