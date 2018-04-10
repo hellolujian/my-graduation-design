@@ -36,6 +36,8 @@ public class ResourceVO {
 
     private String userName;
 
+    private Integer userId;
+
     //以json格式存储
     private List<String> tagList;
 

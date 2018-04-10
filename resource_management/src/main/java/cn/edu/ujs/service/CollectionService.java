@@ -1,6 +1,7 @@
 package cn.edu.ujs.service;
 
 import cn.edu.ujs.entity.Collection;
+import org.hibernate.boot.jaxb.cfg.spi.JaxbCfgCollectionCacheType;
 
 import java.util.List;
 
@@ -15,6 +16,9 @@ public interface CollectionService {
     /**移除收藏记录*/
     public Collection removeCollection(Integer collectionId);
 
+    /**用户取消收藏*/
+    public Integer removeCollectionByUserIdAndResourceId(Integer userId, Integer resourceId);
+
     /**收藏记录列表,返回resource_id*/
     public List<Integer> findCollectionByUserId(Integer userId);
 
@@ -23,5 +27,8 @@ public interface CollectionService {
 
     /**获取某个资源的收藏个数*/
     public Integer getCollectionAmount(Integer resourceId);
+
+
+
 
 }

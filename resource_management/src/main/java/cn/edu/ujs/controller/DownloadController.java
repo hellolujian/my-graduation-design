@@ -23,7 +23,7 @@ public class DownloadController {
     private DownloadService downloadService;
 
     //获取用户的下载列表
-    @GetMapping(value = "/userId/{userId}")
+    @GetMapping(value = "/users/{userId}")
     public ResultVO getDownloadsByUserId(@PathVariable(value = "userId") Integer userId) {
 
         ResultVO resultVO = commonService.userDownloads(userId);

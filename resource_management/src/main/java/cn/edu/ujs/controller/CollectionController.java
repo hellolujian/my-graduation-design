@@ -24,7 +24,7 @@ public class CollectionController {
     private CommonService commonService;
 
     //获取某个用户的收藏列表
-    @GetMapping(value = "/userId/{userId}")
+    @GetMapping(value = "/users/{userId}")
     public ResultVO getCollectionsByUserId(@PathVariable(value = "userId") Integer userId) {
 
         ResultVO resultVO = commonService.userCollection(userId);
@@ -55,6 +55,20 @@ public class CollectionController {
         ResultVO resultVO = null;
         if (collection != null)
             resultVO = ResultVOUtil.success(collection);
+        else
+            resultVO = ResultVOUtil.error();
+        return resultVO;
+    }
+
+    //用户取消收藏
+    @PostMapping(value = "/cancelCollection")
+    public ResultVO cancelCollection(@RequestParam(value = "userId") Integer userId,
+                                     @RequestParam(value = "resourceId") Integer resourceId) {
+
+        Integer result = collectionService.removeCollectionByUserIdAndResourceId(userId, resourceId);
+        ResultVO resultVO = null;
+        if (result != null)
+            resultVO = ResultVOUtil.success(result);
         else
             resultVO = ResultVOUtil.error();
         return resultVO;

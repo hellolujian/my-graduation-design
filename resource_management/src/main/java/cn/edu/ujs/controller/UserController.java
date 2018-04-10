@@ -81,6 +81,8 @@ public class UserController {
     public ResultVO login(@RequestParam(value = "username") String username,
                           @RequestParam(value = "password") String password,
                           HttpServletRequest httpServletRequest) {
+
+        logger.info("user:{},address:{},ip:{}",httpServletRequest.getRemoteUser(),httpServletRequest.getRemoteAddr(),httpServletRequest.getRemoteHost());
         HttpSession session = httpServletRequest.getSession();
         ResultVO resultVO = null;
         User user = userService.login(username, password);

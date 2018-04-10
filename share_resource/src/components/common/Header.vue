@@ -64,6 +64,9 @@ Button {
   border: none;
   margin: 20px;
 }
+.head .head-right .user-avatar {
+    cursor:pointer;
+}
 </style>
 
 <template>

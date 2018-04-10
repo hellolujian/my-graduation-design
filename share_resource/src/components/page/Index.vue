@@ -163,6 +163,7 @@ export default {
     getHotTagData() {
       getRequest(this.getHotTagUrl).then(response => {
         this.tagList = response.data.data;
+        console.log(this.tagList)
       });
     },
     //滚动固定

@@ -13,12 +13,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.IntroductionInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -143,9 +146,10 @@ public class ResourceController {
     @RequestMapping(value = "/download/{resourceId}/users/{userId}")
     public ResultVO downloadResource(@PathVariable("resourceId") Integer resourceId,
                                      @PathVariable("userId") Integer userId,
+                                     HttpServletRequest httpServletRequest,
                                      HttpServletResponse httpServletResponse) {
 
-        ResultVO resultVO = commonService.downloadResource(userId,resourceId,httpServletResponse);
+        ResultVO resultVO = commonService.downloadResource(userId,resourceId,httpServletRequest,httpServletResponse);
         return resultVO;
     }
 
@@ -190,7 +194,7 @@ public class ResourceController {
     }
 
     //获取某个用户的资源列表
-    @GetMapping(value = "/userId/{userId}")
+    @GetMapping(value = "/users/{userId}")
     public ResultVO getResourcesByUserId(@PathVariable(value = "userId") Integer userId,
                                          @RequestParam(value = "checkStatus", required = false) Integer checkStatus) {
 
@@ -206,6 +210,38 @@ public class ResourceController {
         Integer result = resourceService.getResourceCountByUserId(userId);
         ResultVO resultVO = ResultVOUtil.success(result);
         return resultVO;
+    }
+
+    @RequestMapping(value="/testDownload",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public void testDownload(HttpServletResponse resp) throws IOException{
+        String fileName = "E:/resource.sql";
+        File file = new File(fileName);
+        resp.setHeader("content-type", "application/octet-stream");
+        resp.setContentType("application/octet-stream");
+        resp.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+        byte[] buff = new byte[1024];
+        BufferedInputStream bis = null;
+        OutputStream os = null;
+        try {
+            os = resp.getOutputStream();
+            bis = new BufferedInputStream(new FileInputStream(file));
+            int i = bis.read(buff);
+            while (i != -1) {
+                os.write(buff, 0, buff.length);
+                os.flush();
+                i = bis.read(buff);
+                }
+            } catch (IOException e) {
+            e.printStackTrace();
+            } finally {
+            if (bis != null) {
+                try {
+                    bis.close();
+                    } catch (IOException e) {
+                    e.printStackTrace();
+                    }
+                }
+        }
     }
 
 // TODO: 2018/3/19 应该将为未审核的放进视图里，方便前台一次性获取，而不用查询整个表 

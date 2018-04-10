@@ -19,7 +19,7 @@ public interface RemarkMapper {
     Integer addRemark(Remark remark);
 
     //根据resource_id查询评价
-    @Select("select u.username,u.avatar,r.id,r.content,r.score,r.create_time from user u,remark r where u.id=r.user_id and r.resource_id=#{resourceId} and r.content is not null")
+    @Select("select u.username,u.avatar,r.id,r.content,r.score,r.create_time from user u,remark r where u.id=r.user_id and r.resource_id=#{resourceId} and r.content != '' order by create_time desc")
     @Results({
             @Result(column = "id", property = "id"),
             @Result(column = "username", property = "username"),
@@ -34,7 +34,7 @@ public interface RemarkMapper {
     Integer getScoreAmount(Integer resourceId);
 
     //获取评论个数
-    @Select("select count(*)as contentAmount from remark where resource_id=#{resourceId} and content is not null")
+    @Select("select count(*)as contentAmount from remark where resource_id=#{resourceId} and content != ''")
     Integer getContentAmount(Integer resourceId);
 
     //获取综合评分

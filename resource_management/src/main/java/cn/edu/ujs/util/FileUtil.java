@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 
 /**
@@ -80,6 +81,7 @@ public class FileUtil {
         // TODO: 2018/3/14 后面配置路径 
         String filePath = "E:\\毕业设计\\resource_management\\src\\main\\resources\\static\\image\\suffix_icon\\";
         File dest = new File(filePath + fileName);
+        // TODO: 2018/4/4 若文件不存在，抛出自定义异常
         // 检测是否存在目录
         if (!dest.getParentFile().exists()) {
             dest.getParentFile().mkdirs();
@@ -96,27 +98,35 @@ public class FileUtil {
         return isUpload;
     }
 
-    public static boolean downloadResource(HttpServletResponse res, String fileName) {
+    public static boolean downloadResource(HttpServletRequest httpServletRequest,HttpServletResponse res, String fileName) {
 
-        res.setHeader("content-type", "application/octet-stream");
-        res.setContentType("application/octet-stream");
-        res.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+        res.setHeader("content-type", "application/octet-stream;charset=UTF-8");
+        res.setContentType("application/octet-stream;charset:utf-8");
+
+        try {
+            res.setHeader("Content-Disposition", "attachment;filename*=UTF-8''" + URLEncoder.encode(fileName,"UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         byte[] buff = new byte[1024];
         BufferedInputStream bis = null;
         OutputStream os = null;
         try {
+
             os = res.getOutputStream();
             bis = new BufferedInputStream(new FileInputStream(new File("e://test//"
                     + fileName)));
             int i = bis.read(buff);
             while (i != -1) {
-                os.write(buff, 0, buff.length);
-                os.flush();
+
+                os.write(buff, 0, i);
+                //os.flush();
                 i = bis.read(buff);
             }
             return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         } finally {
             if (bis != null) {
                 try {
@@ -126,7 +136,6 @@ public class FileUtil {
                 }
             }
         }
-        return false;
     }
 
     /**将文件大小进行单位转换*/
@@ -150,5 +159,16 @@ public class FileUtil {
             resultSize = size + "B   ";
         }
         return resultSize;
+    }
+
+    //encode编码
+    public static String Encode(String message) {
+        String encodeMessage = message;
+        try {
+            encodeMessage = URLEncoder.encode(message,"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return encodeMessage;
     }
 }

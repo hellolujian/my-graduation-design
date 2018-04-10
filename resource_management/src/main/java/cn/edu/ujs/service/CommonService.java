@@ -4,6 +4,7 @@ import cn.edu.ujs.VO.ResultVO;
 import cn.edu.ujs.entity.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ public interface CommonService {
     /**用户下载资源*/
     public ResultVO downloadResource(Integer userId,
                                      Integer resourceId,
+                                     HttpServletRequest httpServletRequest,
                                      HttpServletResponse httpServletResponse);
 
     /**用户上传资源*/

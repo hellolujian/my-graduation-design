@@ -21,6 +21,11 @@ public interface CollectionMapper {
     @Delete("delete from collection where id=#{collectionId}")
     Integer removeCollection(Integer collectionId);
 
+    //根据userId与resourceId删除
+    @Delete("delete from collection where user_id=#{userId} and resource_id=#{resourceId}")
+    Integer removeCollectionByUserIdAndResourceId(@Param("userId") Integer userId,
+                                                  @Param("resourceId") Integer resourceId);
+
     //根据id查询收藏记录
     @Select("select * from collection where id=#{collectionId}")
     Collection findByCollectionId(Integer collectionId);

@@ -73,9 +73,9 @@ public class HelloController {
             String realPath = "e://test//";
             File file = new File(realPath, fileName);
             if (file.exists()) {
-                response.setContentType("application/octet-stream; charset=utf-8");// 设置强制下载不打开
-                response.addHeader("Content-Disposition",
-                        "attachment;fileName=" +  fileName);// 设置文件名
+                //response.setContentType("application/octet-stream; charset=utf-8");// 设置强制下载不打开
+                //response.addHeader("Content-Disposition",
+                 //       "attachment;fileName=" +  fileName);// 设置文件名
                 byte[] buffer = new byte[1024];
                 FileInputStream fis = null;
                 BufferedInputStream bis = null;

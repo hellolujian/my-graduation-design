@@ -73,6 +73,7 @@ public interface ResourceMapper {
             @Result(column = "resource_title", property = "title"),
             @Result(column = "downloads", property = "downloads"),
             @Result(column = "resource_suffix_name", property = "suffixName"),
+            @Result(column = "user_id", property = "userId"),
             @Result(column = "username", property = "userName"),
             @Result(column = "tag_list", property = "tagList"),
             @Result(column = "check_status", property = "checkStatus"),
@@ -125,7 +126,7 @@ public interface ResourceMapper {
                                              @Param("keyword") String keyword);
 
     //根据user_id和resource_id查询
-    @Select("select count(*) from resource where user_id=#{userId} and resource_id=#{resourceId}")
+    @Select("select count(*) from resource where user_id=#{userId} and id=#{resourceId}")
     Integer findByUserIdAndResourceId(@Param("userId") Integer userId,
                                       @Param("resourceId") Integer resourceId);
 

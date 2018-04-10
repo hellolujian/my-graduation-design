@@ -21,7 +21,7 @@ const remark = r => require.ensure([], () => r(require('@/components/common/Rema
 const index = r => require.ensure([], () => r(require('@/components/page/Index')), 'index');
 const download = r => require.ensure([], () => r(require('@/components/page/Download')), 'download');
 const userCenter = r => require.ensure([], () => r(require('@/components/page/UserCenter')), 'userCenter');
-
+const userDetialInfo = r => require.ensure([], () => r(require('@/components/common/UserDetailInfo')), 'userDetialInfo');
 
 //const header = r => require.ensure([], () => r(require('@/components/chonggou/Header')), 'header');
 //const tags = r => require.ensure([], () => r(require('@/components/chonggou/Tags')), 'tags');
@@ -31,6 +31,14 @@ const header = r => require.ensure([], () => r(require('@/components/common/Head
 const tags = r => require.ensure([], () => r(require('@/components/common/Tags')), 'tags');
 const sideBar = r => require.ensure([], () => r(require('@/components/common/SideBar')), 'sideBar');
 const banner = r => require.ensure([], () => r(require('@/components/common/Banner')), 'banner');
+const userNavBar = r => require.ensure([], () => r(require('@/components/common/UserNavBar')), 'userNavBar');
+const hello = r => require.ensure([], () => r(require('@/components/HelloWorld')), 'hello');
+const upload = r => require.ensure([], () => r(require('@/components/common/UploadResource')), 'upload');
+const uploadAttention = r => require.ensure([], () => r(require('@/components/common/UploadAttention')), 'uploadAttention');
+
+const myUpload = r => require.ensure([], () => r(require('@/components/user/MyUpload')), 'myUpload');
+const myDownload = r => require.ensure([], () => r(require('@/components/user/MyDownload')), 'myDownload');
+const myCollection = r => require.ensure([], () => r(require('@/components/user/MyCollection')), 'myCollection');
 
 
 export default new Router({
@@ -99,7 +107,50 @@ export default new Router({
     {
       path: '/userCenter',
       component: userCenter,
-      name: 'userCenter'
+      children: [
+        {
+          path: '',
+          name: 'userCenter',
+          components: {
+            default: myUpload,
+            tags: tags,
+          },
+        },
+        {
+          path: '/userCenter/myUpload',
+          name: 'my-upload',
+          components: {
+            default: myUpload,
+            tags: tags,
+          },
+        },
+        {
+          path: '/userCenter/myDownload',
+          name: 'my-download',
+          components: {
+            default: myDownload,
+            tags: tags,
+          },
+        },
+        {
+          path: '/userCenter/myCollection',
+          name: 'my-collection',
+          components: {
+            default: myCollection,
+            tags: tags,
+          },
+        },
+        {
+          path: '/userCenter/upload',
+          name: 'upload',
+          components: {
+            upload: upload,
+            uploadAttention,uploadAttention,
+          },
+          meta: ['资源管理','我要上传'],
+        },
+      ]
+      
     },
     {
       path: '/login',
@@ -160,6 +211,50 @@ export default new Router({
       path: '/banner',
       name: 'banner',
       component: banner
+    },
+    {
+      path: '/userDetailInfo',
+      name: 'userDetialInfo',
+      component: userDetialInfo
+    },
+    {
+      path: '/userNavBar',
+      name: 'userNavBar',
+      component: userNavBar,
+    },
+    {
+      path: '/upload',
+      component: upload,
+      name: 'upload'
+    },
+    {
+      path: '/myUpload',
+      component: myUpload,
+      name: 'myUpload'
+    },
+    {
+      path: '/myDownload',
+      component: myDownload,
+      name: 'myDownload'
+    },
+    {
+      path: '/myCollection',
+      component: myCollection,
+      name: 'myCollection'
+    },
+    {
+      path: '/uploadResource',
+      component: upload,
+      name: 'uploadResource'
+    },
+    {
+      path: '/uploadAttention',
+      component: uploadAttention,
+      name: 'uploadAttention',
     }
+    //{
+      //path: '/hello',
+      //component: hello
+    //}
   ]
 })

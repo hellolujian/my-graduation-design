@@ -38,6 +38,14 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
+    public Integer removeCollectionByUserIdAndResourceId(Integer userId, Integer resourceId) {
+        Integer result = collectionMapper.removeCollectionByUserIdAndResourceId(userId, resourceId);
+        if (result == 1)
+            return result;
+        return null;
+    }
+
+    @Override
     public List<Integer> findCollectionByUserId(Integer userId) {
 
         List<Integer> resourceIdList = collectionMapper.findCollectionByUserId(userId);

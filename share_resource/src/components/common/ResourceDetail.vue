@@ -57,6 +57,9 @@
                 float: right;
                 margin:0px 20px;
             }
+            .detail-out .detail-remark .pinglun:hover {
+                cursor: pointer;
+            }
             .detail-out .detail-remark span {
                 margin-right: 30px;
             }
@@ -138,11 +141,11 @@
                 下载个数：<span class="points">{{resourceDetailData.downloads}}</span>
             </label>
             <label class="download-btn">
-                <Button 
-                    type="primary" 
-                    icon="ios-cloud-download"
-                    @click="download">立即下载
-                </Button>
+                    <Button 
+                        type="primary" 
+                        icon="ios-cloud-download"
+                        @click="download">立即下载
+                    </Button>
             </label>
         </p>
         <div style="clear:both;"></div>
@@ -178,6 +181,10 @@
             averageScore: {//平均分
                 type: Number,
                 default: 0
+            },
+            href: {
+                type: String,//下载地址
+                default: '',
             }
         },
         mounted() {

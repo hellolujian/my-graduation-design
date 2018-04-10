@@ -1,6 +1,7 @@
 <style scoped>
     .tag-card {
-        width:270px;
+        width:100%;
+        
     }
         .tag-card .tag {
             margin:5px;
@@ -17,8 +18,8 @@
             color="red"
             type="border"
             class="tag"
-            @click.native="tagClick(item.tagName)">
-            {{item.tagName}}
+            @click.native="tagClick(item)">
+            {{item.tagName || item}}
         </Tag>
         
     </Card>
@@ -35,8 +36,11 @@
             }
         },
         methods: {
-            tagClick(tagName) {
-                this.$emit('getTag',tagName)
+            tagClick(item) {
+                if(item.tagName)
+                    this.$emit('getTag',tagName);
+                else 
+                    this.$emit('getTag',item)
             }
         }
     }

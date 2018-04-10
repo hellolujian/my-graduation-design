@@ -9,6 +9,7 @@ import cn.edu.ujs.enums.UploadEnum;
 import cn.edu.ujs.service.*;
 import cn.edu.ujs.util.FileUtil;
 import cn.edu.ujs.util.ResultVOUtil;
+import com.sun.corba.se.impl.orbutil.DenseIntMapImpl;
 import com.sun.deploy.net.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,10 @@ import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +53,7 @@ public class CommonServiceImpl implements CommonService {
     @Override
     public ResultVO downloadResource(Integer userId,
                                      Integer resourceId,
+                                     HttpServletRequest httpServletRequest,
                                      HttpServletResponse httpServletResponse) {
 
         // TODO: 2018/3/4 自己下载自己的是不会显示的，最好也不要写进数据库里
@@ -64,13 +69,16 @@ public class CommonServiceImpl implements CommonService {
         Integer points = resource.getPoints();
         //如果该资源是该用户自己上传的,直接就可以下载
         if (resourceService.isUserUpload(userId,resourceId)) {
-            FileUtil.downloadResource(httpServletResponse,fileName);
-            resultVO = ResultVOUtil.success(resource);
+            FileUtil.downloadResource(httpServletRequest,httpServletResponse,fileName);
+            httpServletResponse.addHeader("download-status",
+                    DownloadEnum.DOWNLOAD_SUCCESS.getCode().toString());
+            httpServletResponse.addHeader("download-message",
+                    FileUtil.Encode(DownloadEnum.DOWNLOAD_SUCCESS.getMessage()));
         } else {
             //判断该用户的积分是否足够
             if (userService.isEnabledToDownload(userId,points)) {
                 //判断资源是否下载成功
-                boolean isDownload = FileUtil.downloadResource(httpServletResponse,fileName);
+                boolean isDownload = FileUtil.downloadResource(httpServletRequest,httpServletResponse,fileName);
                 if (isDownload) {
                     //扣除相应积分
                     userService.subUserPoints(userId,points);
@@ -81,15 +89,29 @@ public class CommonServiceImpl implements CommonService {
                     download.setResourceId(resourceId);
                     download.setUserId(userId);
                     downloadService.addDownload(download);
-                    resultVO = ResultVOUtil.success(download);
+                    //resultVO = ResultVOUtil.success(download);
+                    httpServletResponse.addHeader("download-status",
+                            DownloadEnum.DOWNLOAD_SUCCESS.getCode().toString());
+                    httpServletResponse.addHeader("download-message",
+                            FileUtil.Encode(DownloadEnum.DOWNLOAD_SUCCESS.getMessage()));
+
                 } else {
-                    resultVO = ResultVOUtil.error(DownloadEnum.DOWNLOAD_ERROR.getCode(),
-                            DownloadEnum.DOWNLOAD_ERROR.getMessage());
+                    //resultVO = ResultVOUtil.error(DownloadEnum.DOWNLOAD_ERROR.getCode(),
+                            //DownloadEnum.DOWNLOAD_ERROR.getMessage());
+                    httpServletResponse.addHeader("download-status",
+                            DownloadEnum.DOWNLOAD_ERROR.getCode().toString());
+                    httpServletResponse.addHeader("download-message",
+                            FileUtil.Encode(DownloadEnum.DOWNLOAD_ERROR.getMessage()));
                 }
+                // TODO: 2018/4/5  将提示信息放入header中，否则会写进文件
             }
             else {
-                resultVO = ResultVOUtil.error(DownloadEnum.DOWNLOAD_NOT_ENOUGHT_POINTS.getCode(),
-                        DownloadEnum.DOWNLOAD_NOT_ENOUGHT_POINTS.getMessage());
+                //resultVO = ResultVOUtil.error(DownloadEnum.DOWNLOAD_NOT_ENOUGHT_POINTS.getCode(),
+                        //DownloadEnum.DOWNLOAD_NOT_ENOUGHT_POINTS.getMessage());
+                httpServletResponse.addHeader("download-status",
+                        DownloadEnum.DOWNLOAD_NOT_ENOUGHT_POINTS.getCode().toString());
+                httpServletResponse.addHeader("download-message",
+                        FileUtil.Encode(DownloadEnum.DOWNLOAD_NOT_ENOUGHT_POINTS.getMessage()));
             }
         }
         return resultVO;
@@ -157,7 +179,7 @@ public class CommonServiceImpl implements CommonService {
 
         List<Integer> resourceIdList = downloadService.findDownloadByUserId(userId);
         List<ResourceVO> resourceVOList = getResourceByIdList(resourceIdList);
-        ResultVO resultVO = ResultVOUtil.success(resourceIdList);
+        ResultVO resultVO = ResultVOUtil.success(resourceVOList);
         return resultVO;
     }
 
@@ -182,7 +204,7 @@ public class CommonServiceImpl implements CommonService {
 
         List<ResourceVO> resourceVOList = new ArrayList<>();
         for (Integer resourceId : resourceIdList) {
-            resourceVOList.add(resourceService.getOneResourceVO(resourceId));
+            resourceVOList.add(resourceService.getOneResourceDetail(resourceId));
         }
         return resourceVOList;
     }
