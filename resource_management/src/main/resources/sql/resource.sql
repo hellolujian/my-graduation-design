@@ -37,9 +37,9 @@ create table resource_type (
     unique key type_name_unique(type_name) using btree
 ) comment '资源类型表' ;
 
-insert into resource_type(type_name) values('工具类');
 insert into resource_type(type_name) values('文档类');
 insert into resource_type(type_name) values('代码类');
+insert into resource_type(type_name) values('工具类');
 insert into resource_type(type_name) values('其他');
 
 create table parent_category (
@@ -69,7 +69,7 @@ create table child_category (
     primary key(id)
 ) auto_increment=100 comment '子类别' ;
 
-insert into child_category(parent_category_id,child_category_name) values(10,'HTML/CSS');
+insert into child_category(parent_category_id,child_category_name) values(10,'HTML CSS');
 insert into child_category(parent_category_id,child_category_name) values(10,'JavaScript');
 insert into child_category(parent_category_id,child_category_name) values(10,'jQuery');
 insert into child_category(parent_category_id,child_category_name) values(10,'Node.js');
@@ -77,7 +77,7 @@ insert into child_category(parent_category_id,child_category_name) values(10,'Bo
 insert into child_category(parent_category_id,child_category_name) values(10,'Angular');
 insert into child_category(parent_category_id,child_category_name) values(10,'ReactJS');
 insert into child_category(parent_category_id,child_category_name) values(10,'Vue.js');
-insert into child_category(parent_category_id,child_category_name) values(10,'Sass/Less');
+insert into child_category(parent_category_id,child_category_name) values(10,'Sass Less');
 insert into child_category(parent_category_id,child_category_name) values(10,'WebApp');
 insert into child_category(parent_category_id,child_category_name) values(10,'前端工具');
 insert into child_category(parent_category_id,child_category_name) values(10,'其他');
@@ -85,9 +85,9 @@ insert into child_category(parent_category_id,child_category_name) values(11,'PH
 insert into child_category(parent_category_id,child_category_name) values(11,'Java');
 insert into child_category(parent_category_id,child_category_name) values(11,'SpringBoot');
 insert into child_category(parent_category_id,child_category_name) values(11,'Python');
-insert into child_category(parent_category_id,child_category_name) values(11,'C');
+insert into child_category(parent_category_id,child_category_name) values(11,'C语言');
 insert into child_category(parent_category_id,child_category_name) values(11,'C++');
-insert into child_category(parent_category_id,child_category_name) values(11,'Go');
+insert into child_category(parent_category_id,child_category_name) values(11,'Go语言');
 insert into child_category(parent_category_id,child_category_name) values(11,'C#');
 insert into child_category(parent_category_id,child_category_name) values(11,'Ruby');
 insert into child_category(parent_category_id,child_category_name) values(11,'其他');
@@ -123,9 +123,9 @@ insert into child_category(parent_category_id,child_category_name) values(16,'Li
 insert into child_category(parent_category_id,child_category_name) values(16,'MacOS');
 insert into child_category(parent_category_id,child_category_name) values(16,'Solaris');
 insert into child_category(parent_category_id,child_category_name) values(16,'Ubuntu');
-insert into child_category(parent_category_id,child_category_name) values(16,'Ubuntu');
-insert into child_category(parent_category_id,child_category_name) values(16,'Ubuntu');
-insert into child_category(parent_category_id,child_category_name) values(16,'Ubuntu');
+insert into child_category(parent_category_id,child_category_name) values(16,'Unix');
+insert into child_category(parent_category_id,child_category_name) values(16,'Windows Server');
+insert into child_category(parent_category_id,child_category_name) values(16,'桌面系统');
 insert into child_category(parent_category_id,child_category_name) values(16,'其他');
 insert into child_category(parent_category_id,child_category_name) values(17,'机器学习');
 insert into child_category(parent_category_id,child_category_name) values(17,'深度学习');
@@ -176,7 +176,7 @@ insert into resource_suffix(suffix_name,suffix_image) values('.rar','http://127.
 
 create table resource (
     id int not null auto_increment comment '资源id',
-    resource_title varchar(32) not null comment '资源标题',
+    resource_title varchar(255) not null comment '资源标题',
     resource_type_id int not null comment '资源类型id',
     resource_category_id int not null comment '资源类别id',
     resource_suffix_name varchar(32) comment '资源后缀名',
@@ -193,13 +193,13 @@ create table resource (
     key user_id_index (user_id) using btree comment '便于找出某个用户上传的资源'
 ) comment '资源表' ;
 
-
 insert into resource(resource_title,resource_type_id,resource_category_id,resource_suffix_name,user_id,tag_list,check_status,resource_position,resource_size,points,description) values("a",1,101,'.doc',1,'["mysql","java"]',0,"a","0KB",0,"a");
 insert into resource(resource_title,resource_type_id,resource_category_id,resource_suffix_name,user_id,tag_list,check_status,resource_position,resource_size,points,description) values("b",1,102,'.doc',2,'["mysql","java"]',0,"a","0KB",0,"a");
 insert into resource(resource_title,resource_type_id,resource_category_id,resource_suffix_name,user_id,tag_list,check_status,resource_position,resource_size,points,description) values("c",1,103,'.doc',3,'["mysql","java"]',0,"a","0KB",0,"a");
 insert into resource(resource_title,resource_type_id,resource_category_id,resource_suffix_name,user_id,tag_list,check_status,resource_position,resource_size,points,description) values("d",1,104,'.doc',4,'["mysql","java"]',0,"a","0KB",0,"a");
 insert into resource(resource_title,resource_type_id,resource_category_id,resource_suffix_name,user_id,tag_list,check_status,resource_position,resource_size,points,description) values("e",1,105,'.doc',5,'["mysql","java"]',0,"a","0KB",0,"a");
 insert into resource(resource_title,resource_type_id,resource_category_id,resource_suffix_name,user_id,tag_list,check_status,resource_position,resource_size,points,description) values("f",1,155,'.doc',5,'["mysql","java"]',0,"a","0KB",0,"a");
+
 
 create table collection (
     id int not null auto_increment comment '收藏id',

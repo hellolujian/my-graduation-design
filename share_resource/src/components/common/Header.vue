@@ -87,7 +87,9 @@ Button {
                 <Button 
                     class="head-right-btn"
                     @click="login">登录</Button>
-                <Button class="head-right-btn">注册</Button>
+                <Button 
+                    class="head-right-btn"
+                    @click="register">注册</Button>
             </span>
             <Dropdown v-if="!loginFlag" @on-click="handleDropdownClick">
                 <Avatar size="large" class="user-avatar" src="../../../static/image/avatar.jpg"></Avatar>
@@ -119,8 +121,27 @@ Button {
             },
             login() {
                 this.$router.push({
-                    name: "login"
+                    name: "login",
+                    params: {
+                        redirectPath: 'index',
+                        redirectParams: {
+                            
+                        },
+                        loginClick: true,
+                    }
                 });
+            },
+            register() {
+                this.$router.push({
+                    name: 'login',
+                    params: {
+                        redirectPath: 'index',
+                        redirectParams: {
+                            
+                        },
+                        loginClick: false
+                    }
+                })
             },
             isLogin() {
                 let userId = null;

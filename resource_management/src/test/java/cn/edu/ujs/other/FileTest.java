@@ -3,6 +3,7 @@ package cn.edu.ujs.other;
 import cn.edu.ujs.VO.ResourceVO;
 import cn.edu.ujs.entity.One;
 import cn.edu.ujs.entity.Resource;
+import cn.edu.ujs.jsoup.GetResourceData;
 import cn.edu.ujs.mapper.OneMapper;
 import cn.edu.ujs.mapper.ResourceMapper;
 import cn.edu.ujs.util.HttpClientUtil;
@@ -102,4 +103,52 @@ public class FileTest {
         Integer result = oneMapper.addOne(one);
         Assert.assertEquals(new Integer(1),result);
     }
+
+    @Test
+    public void textEquals() throws Exception {
+
+        String ab = "ab";
+        String ba = "ab";
+        String newab = new String("ab");
+        String newba = new String("ab");
+        System.out.println();
+        if(ab == ba)
+            System.out.println("ab == ba");
+        if(ab.equals(ba))
+            System.out.println("ab equals ba");
+
+        if(newab == newba)
+            System.out.println("newab == newba");
+        if(newab.equals(newba))
+            System.out.println("newab equals newba");
+
+        if(ab == newab)
+            System.out.println("ab == newab");
+        if(ab.equals(newab))
+            System.out.println("ab equals newab");
+
+        int aint = 10;
+        double adouble = 10.0;
+        if (aint == adouble)
+            System.out.println("aint == adouble");
+
+        Integer aInteger = 10;
+        Double aDouble = 10.0;
+        if (aInteger.equals(aDouble))
+            System.out.println("aInteger equals aDouble");
+        if (aint == aInteger)
+            System.out.println("aint == aInteger");
+        if (aint == aDouble)
+            System.out.println("aint == aDouble");
+        if (aInteger.equals(aint))
+            System.out.println("aInteger equals aint");
+    }
+
+    @Test
+    public void testGetData() throws Exception {
+
+
+    }
+
+    
 }

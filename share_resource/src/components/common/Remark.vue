@@ -80,7 +80,12 @@
         <p class="remark-content">
             <label v-if="!loginFlag">
                 <router-link 
-                    :to="{name: 'login'}">登录
+                    :to="{name: 'login', params: {
+                            redirectPath: 'download',
+                            redirectParams: {
+                                resourceId: resourceId
+                            }
+                        }}">登录
                 </router-link>后才能评论
             </label>
             <label v-else>
@@ -138,6 +143,10 @@
             }
         },
         props: {
+            resourceId: {
+                type: Number,
+                
+            },
             total: {//评论总数
                 type: Number,
                 default: 0,

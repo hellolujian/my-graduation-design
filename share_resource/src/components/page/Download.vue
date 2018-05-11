@@ -65,6 +65,7 @@
                 <div ref="remarkDiv">
                     <router-view 
                         name="remark"
+                        :resourceId="resourceId"
                         :total="contentAmount"
                         :data="remarkData"
                         :size="pageSize"
@@ -89,7 +90,9 @@
             </Button>
             <router-view
                 name="sideUserInfo"
-                :data="userInfo"
+                path="download"
+                :redirectParams="{resourceId: resourceId}"
+                :data="resourceOwner"
                 :userUploadCount="userUploadCount"
                 pageName="download"
                 @upload="upload">
@@ -110,7 +113,7 @@
         </p>
         <p class="modal-content">
             点击
-            <router-link :to="{ name: 'userCenter' }">
+            <router-link :to="{ name: 'my-collection' }">
                 我的收藏
             </router-link>
             查看全部收藏资源
@@ -152,7 +155,7 @@
                 pageNum: 1,
                 pageSize: 3,
                 userInfo: {},//获取该资源所属用户信息
-                getUserUploadCountUrl: '/resources/count/userId/',//获取该资源所属用户上传资源数url
+                resourceOwner: {},//资源所有者信息
                 userUploadCount: 0,//该资源所属用户上传资源数
                 addCollectionUrl: '/collections/addCollection',//添加收藏记录url
                 showModal: false,//是否显示对话框
@@ -166,22 +169,31 @@
             this.isRemark(this.resourceId);
             this.isDownload(this.resourceId);
             //this.isBelongToUser();  //由于getUserInfo中已有此判断，所以这里不需要了,但是又由于异步延迟，所以有点麻烦，后续改进
+            this.getResourceOwner();
             this.getResourceDetailData();
             this.getRemarkData();
-            this.getUserUploadCount();
             this.getDownloadUrl();
         },
         methods: {
-            //获取该资源所属用户上传资源数
-            getUserUploadCount() {
-                let url = this.getUserUploadCountUrl + this.resourceId;
-                getRequest(url).then(response => {
-                    this.userUploadCount = response.data.data;
+            //获取资源拥有者信息
+            getResourceOwner() {
+                let url = '/users/userInfo';
+                let params = {
+                    resourceId: this.resourceId
+                }
+                getRequest(url,params).then(response => {
+                    this.userUploadCount = response.data.data.uploadCount;
+                    this.resourceOwner = response.data.data;
+                    
+                }, response => {
+                    this.$alert('找不到')
                 })
             },
+            
             //获取资源详细信息
             getResourceDetailData() {
                 let url = this.getResourceDetailUrl + this.resourceId;
+                
                 getRequest(url).then(response => {
                     //console.log(response.data.data);
                     this.resourceDetailData = response.data.data.data;
@@ -300,7 +312,13 @@
                     }
                 } else {
                     this.$router.push({
-                        name: 'login'
+                        name: 'login',
+                        params: {
+                            redirectPath: 'download',
+                            redirectParams: {
+                                resourceId: this.resourceId
+                            }
+                        }
                     })
                 }
                 
@@ -341,6 +359,7 @@
                     });
                     this.getRemarkData();
                     this.remarkFlag = true;
+                    this.getResourceDetailData();
                 })
             },
             //下载
@@ -349,10 +368,10 @@
                     //window.open(this.downloadUrl,'','',true)
                     getRequest2(this.downloadUrl).then(response => {
                         if(response.headers['download-status'] != 0) {
-                            alert(decodeURI(response.headers['download-message']))
-
+                            //alert(decodeURI(response.headers['download-message']))
+                            this.$Message.error(decodeURI(response.headers['download-message']))
                         } else {
-                            alert('开始下载')
+                            
                             let url = window.URL.createObjectURL(new Blob([response.data]));
                             let link = document.createElement('a');
                             link.style.display = 'none';
@@ -360,13 +379,15 @@
                             link.setAttribute('download',this.resourceDetailData.name);
                             document.body.appendChild(link);
                             link.click();
+                            this.downloadFlag = true;
                         }
                         console.log(response.data)
                         console.log(response.headers);
                         console.log(response.status)
                         console.log(decodeURI(response.headers['download-message']))
-                        this.downloadFlag = true;
+                        
                         this.getResourceDetailData();
+                        this.getResourceOwner()
                     })
                 }
             },

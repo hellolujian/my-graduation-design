@@ -8,7 +8,8 @@
             theme="dark" 
             accordion 
             width="150px"
-            :open-names="['my-account']"
+            :open-names="['my-account','resource-management']"
+            :active-name="activeName"
             @on-select="handleSelect">
             <Submenu name="resource-management">
                 <template slot="title">
@@ -50,14 +51,27 @@
     export default {
         data() {
             return {
-                
+                activeName: 'my-upload',
             }
         },
+        
         methods: {
             handleSelect(itemName) {
                 
                 this.$emit('menuItemSelect',itemName)
+            },
+            handleActiveName() {
+                this.activeName = this.$route.name;
             }
+        },
+        mounted() {
+            
+            this.activeName = this.$route.name;
+            //alert(this.activeName)
+        },
+        watch: {
+          // 如果路由有变化，会再次执行该方法
+          "$route.name": "handleActiveName"
         }
     }
 </script>

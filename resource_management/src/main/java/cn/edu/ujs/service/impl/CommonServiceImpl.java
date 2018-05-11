@@ -4,6 +4,7 @@ import cn.edu.ujs.VO.ResourceVO;
 import cn.edu.ujs.VO.ResultVO;
 import cn.edu.ujs.entity.Download;
 import cn.edu.ujs.entity.Resource;
+import cn.edu.ujs.entity.User;
 import cn.edu.ujs.enums.DownloadEnum;
 import cn.edu.ujs.enums.UploadEnum;
 import cn.edu.ujs.service.*;
@@ -197,6 +198,20 @@ public class CommonServiceImpl implements CommonService {
         map.put("scoreAmount",scoreAmount);
         map.put("averageScore",averageScore);
         map.put("collectAmount",collectAmount);
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> getResourceOwnerUserInfo(Integer resourceId) {
+
+        Map<String, Object> map = new HashMap<>();
+        Resource resource = resourceService.findByResourceId(resourceId);
+        User user = userService.findByUserId(resource.getUserId());
+        map.put("id",user.getId());
+        map.put("username",user.getUsername());
+        map.put("avatar",user.getAvatar());
+        map.put("points",user.getPoints());
+        map.put("uploadCount",resourceService.getResourceCountByUserId(user.getId()));
         return map;
     }
 

@@ -10,6 +10,12 @@ import java.util.Map;
  */
 public interface UserService {
 
+    /**根据用户名查询*/
+    public User findByUsername(String username);
+
+    /**根据用户id查询*/
+    public User findByUserId(Integer userId);
+
     /**判断用户名是否存在*/
     public boolean isExist(String username);
 

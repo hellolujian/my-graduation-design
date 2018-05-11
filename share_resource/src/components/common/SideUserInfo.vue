@@ -24,7 +24,11 @@
 <template>
     <Card class="card">
         <router-link 
-            :to="{name: data.id == null ? 'login' : 'userCenter'}">
+            :to="{name: data.id == null ? 'login' : 'userCenter',
+                        params: {
+                            redirectPath: path,
+                            redirectParams: redirectParams,
+                        }}">
             <Avatar 
                 size="large" 
                 :src="data.avatar">登录
@@ -70,12 +74,25 @@
             userUploadCount: {//该用户上传的资源总数
                 type: Number,
                 default: 0,
+            },
+            path: {//该组件所在页面
+                type: String,
+            },
+            redirectParams: {//跳转参数
+                type: Object,
+                default: function() {
+                    return {
+
+                    }
+                }
             }
         },
         methods: {
             uploadClick() {
                 this.$emit('upload')
             }
+        },
+        mounted() {
         }
     }
 </script>

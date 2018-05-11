@@ -4,6 +4,7 @@ import cn.edu.ujs.VO.ResultVO;
 import cn.edu.ujs.entity.User;
 import cn.edu.ujs.enums.UserEnum;
 import cn.edu.ujs.mapper.UserMapper;
+import cn.edu.ujs.service.CommonService;
 import cn.edu.ujs.service.UserService;
 import cn.edu.ujs.util.HttpClientUtil;
 import cn.edu.ujs.util.ResultVOUtil;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.jws.soap.SOAPBinding;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,9 @@ public class UserController {
     
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CommonService commonService;
 
     //用户列表
     @GetMapping("/")
@@ -75,6 +80,37 @@ public class UserController {
     }
 
     //用户注册
+    @RequestMapping(value = "/register")
+    public ResultVO register(@RequestParam(value = "username") String username,
+                          @RequestParam(value = "password") String password,
+                          HttpServletRequest httpServletRequest) {
+
+
+        ResultVO resultVO = null;
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        User newUser = userService.addUser(user);
+        if (newUser != null) {
+            resultVO = ResultVOUtil.success(newUser);
+            logger.info("userInfo:{}",newUser.getId());
+            // TODO: 2018/3/6 记录session信息
+
+        } else
+            resultVO = ResultVOUtil.error(UserEnum.LOGIN_ERROR.getCode(),
+                    UserEnum.LOGIN_ERROR.getMessage());
+        return resultVO;
+
+    }
+
+    //注册用户名是否已经存在
+    @RequestMapping(value = "/{username}")
+    public ResultVO userExist(@PathVariable(value = "username") String username) {
+        boolean existFlag = userService.isExist(username);
+        if (existFlag)
+            return ResultVOUtil.success(true);
+        return ResultVOUtil.success(false);
+    }
 
     //用户登录
     @RequestMapping(value = "/login")
@@ -127,5 +163,12 @@ public class UserController {
 
         ResultVO resultVO = ResultVOUtil.success(code);
         return resultVO;
+    }
+
+    //前台sideUserInfo所需数据
+    @RequestMapping(value = "/userInfo")
+    public ResultVO getUserInfo(@RequestParam(value = "resourceId") Integer resourceId) {
+
+        return ResultVOUtil.success(commonService.getResourceOwnerUserInfo(resourceId));
     }
 }

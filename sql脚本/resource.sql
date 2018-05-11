@@ -28,9 +28,9 @@ create table resource_type (
     unique key type_name_unique(type_name) using btree
 ) comment '资源类型表' ;
 
-insert into resource_type(type_name) values('工具类');
 insert into resource_type(type_name) values('文档类');
 insert into resource_type(type_name) values('代码类');
+insert into resource_type(type_name) values('工具类');
 insert into resource_type(type_name) values('其他');
 
 create table parent_category (
@@ -166,7 +166,7 @@ insert into resource_suffix(suffix_name) values('.rar');
 
 create table resource (
     id int not null auto_increment comment '资源id',
-    title varchar(32) not null comment '资源名称',
+    title varchar(64) not null comment '资源名称',
     type_id int not null comment '资源类型id',
     category_id int not null comment '资源类别id',
     suffix_id int comment '资源后缀id',

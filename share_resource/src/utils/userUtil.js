@@ -15,3 +15,10 @@ export const loginOut = () =>{
 export const login = (userInfo) =>{
     localStorage.setItem('userInfo',JSON.stringify(userInfo));
 }
+
+//用户跳转至个人中心
+export const setActiveName = (newActiveName) => {
+    let activeName = sessionStorage.getItem('activeName');
+    if(activeName == null)
+    sessionStorage.setItem('activeName', newActiveName);
+}

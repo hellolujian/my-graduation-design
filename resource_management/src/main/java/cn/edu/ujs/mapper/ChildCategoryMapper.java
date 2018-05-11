@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by DELL on 2018/3/1.
@@ -51,4 +52,8 @@ public interface ChildCategoryMapper {
             @Result(column = "update_time", property = "updateTime")
     })
     List<ChildCategory> findByParentCategoryId(Integer parentCategoryId);
+
+    //查找所有分类
+    @Select("select id,child_category_name from child_category")
+    List<Map<String,Object>> findAll();
 }

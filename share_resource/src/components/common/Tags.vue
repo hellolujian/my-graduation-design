@@ -38,7 +38,7 @@
         methods: {
             tagClick(item) {
                 if(item.tagName)
-                    this.$emit('getTag',tagName);
+                    this.$emit('getTag',item.tagName);
                 else 
                     this.$emit('getTag',item)
             }

@@ -114,7 +114,7 @@
         <p class="detail-remark">
             <Rate disabled v-model="averageScore"></Rate>
             <span>综合评分：{{averageScore}}</span>
-            <span>({{contentAmount}}位用户评分)</span>
+            <span>({{scoreAmount}}位用户评分)</span>
             <label class="pinglun" @click="remark">
                 <Icon 
                     type="chatbubble-working" 
@@ -185,7 +185,8 @@
             href: {
                 type: String,//下载地址
                 default: '',
-            }
+            },
+            
         },
         mounted() {
         },

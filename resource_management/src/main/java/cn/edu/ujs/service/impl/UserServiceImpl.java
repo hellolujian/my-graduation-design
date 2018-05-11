@@ -23,6 +23,17 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Override
+    public User findByUsername(String username) {
+        return userMapper.findByUsername(username);
+    }
+
+    @Override
+    public User findByUserId(Integer userId) {
+
+        return userMapper.findByUserId(userId);
+    }
+
+    @Override
     public boolean isExist(String username) {
 
         User user = userMapper.findByUsername(username);
@@ -34,9 +45,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addUser(User user) {
 
-        Integer result = userMapper.addUser(user);
-        if (result == 1)
-            return user;
+        boolean existFlag = isExist(user.getUsername());
+        if (!existFlag) {
+            Integer result = userMapper.addUser(user);
+            if (result == 1) {
+                user = findByUsername(user.getUsername());
+                return user;
+            }
+
+        }
         return null;
     }
 

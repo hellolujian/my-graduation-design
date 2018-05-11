@@ -1,12 +1,16 @@
 <template>
   <div id="app">
+    <audio loop="loop" id="notice">
+        <source src="/sell/mp3/song.mp3" type="audio/mpeg">
+    </audio>
     <router-view/>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  
 }
 </script>
 

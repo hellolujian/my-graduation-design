@@ -139,7 +139,7 @@
         </el-table>
             </el-tab-pane>
         </el-tabs>
-        <div>
+        <div class="page">
             <el-pagination
                 @current-change ="handleCurrentChange"
                 layout="prev, pager, next"
@@ -183,7 +183,7 @@
         methods: {
             getResourceData() {
                 this.listLoading = true;
-                getRequest(this.getResourceUrl).then(response => {
+                getRequest(this.getResourceUrl, { sortType: 1}).then(response => {
                     this.tableData = response.data.data;
                     this.total = this.tableData.length;
                     this.resourceData = this.tableData;
@@ -337,5 +337,9 @@
         width:55px;
         height:24px;
         line-height:24px;
+    }
+    .page {
+        text-align: center;
+        margin: 20px auto;
     }
 </style>

@@ -83,6 +83,7 @@
 
 <script>
     import {getRequest,postRequest} from '../../utils/api';
+    import {setActiveName} from '@/utils/userUtil';
     import vHead from '@/components/common/Header';
     import vUserNavBar from '@/components/common/UserNavBar';
     import vUserDetailInfo from '@/components/common/UserDetailInfo';
@@ -122,7 +123,16 @@
             this.getMyCollect(this.getCollectionDataUrl);
             this.getMyUpload(this.getMyResourceUrl);
             this.getMyDownload(this.getDownloadUrl);
-            this.getResourceData(this.getMyResourceUrl)
+            var initDataUrl = this.getMyResourceUrl;
+            //alert(this.$route.name)
+            if(this.$route.name == 'my-collection')
+                initDataUrl = this.getCollectionDataUrl;
+            else if(this.$route.name == 'my-upload')
+                initDataUrl = this.getMyResourceUrl;
+            else if(this.$route.name == 'my-download')
+                initDataUrl = this.getDownloadUrl;
+            //alert(initDataUrl)
+            this.getResourceData(initDataUrl);
             this.getResourceTypeData();
             this.getPointsData();
             this.getParentCategoryData();
@@ -286,6 +296,7 @@
                 this.getMyUpload(this.getMyResourceUrl);
             },
             uploadBtnClick() {
+                setActiveName('upload');
                 this.$router.push({
                     name: 'upload',
                 })

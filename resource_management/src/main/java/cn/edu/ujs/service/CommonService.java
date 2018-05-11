@@ -32,4 +32,7 @@ public interface CommonService {
 
     /**获取单个资源的详细信息*/
     public Map<String,Object> getOneResource(Integer resourceId);
+
+    /**根据资源获取用户信息*/
+    public Map<String,Object> getResourceOwnerUserInfo(Integer resourceId);
 }

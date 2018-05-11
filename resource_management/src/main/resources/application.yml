@@ -1,3 +1,4 @@
+#mysql数据库配置
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
@@ -9,12 +10,14 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+  #上传文件的最大值
   http:
     multipart:
       max-file-size: 1000Mb
       max-request-size: 1000Mb
 server:
   port: 8082
+#mybatis配置数据格式转换，
 mybatis:
   type-handlers-package: cn.edu.ujs.typehandler
 #pagehelper分页插件配置

@@ -1,18 +1,25 @@
 package cn.edu.ujs.controller;
 
+import cn.edu.ujs.entity.Resource;
+import cn.edu.ujs.jsoup.GetResourceData;
+import cn.edu.ujs.mapper.ChildCategoryMapper;
+import cn.edu.ujs.service.ChildCategoryService;
+import cn.edu.ujs.service.ResourceService;
 import cn.edu.ujs.util.FileUtil;
+import cn.edu.ujs.websocket.WebSocket;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by DELL on 2018/3/3.
@@ -21,6 +28,68 @@ import java.io.*;
 public class HelloController {
 
     private static final Logger logger = LoggerFactory.getLogger(HelloController.class);
+
+    @Autowired
+    WebSocket webSocket;
+
+    @Autowired
+    ResourceService resourceService;
+
+    @Autowired
+    ChildCategoryMapper childCategoryMapper;
+
+    @RequestMapping("/websocket")
+    public String testWebsocket() {
+        webSocket.sendMessage("hello");
+        return "websocket";
+    }
+
+
+    @RequestMapping("/data/{category}/{type}/{point}/{sort}/{pageNum}")
+    public String getData(@PathVariable(value = "category") String category,
+                          @PathVariable(value = "type") String type,
+                          @PathVariable(value = "point") String point,
+                          @PathVariable(value = "sort") String sort,
+                          @PathVariable(value = "pageNum") String pageNum) {
+
+
+        GetResourceData getResourceData = new GetResourceData();
+        //List<Resource> resourceList = getResourceData.getData("0","10","0","0","1");
+        List<Map<String,Object>> list = childCategoryMapper.findAll();
+        for (Map<String,Object> one : list) {
+
+            String keyword = one.get("child_category_name").toString();
+            Integer categoryId = new Integer(one.get("id").toString());
+            if (!keyword.equals("其他")) {
+                for (int i = 0; i < 4; i++) {
+                    type = "1";
+                    type = Integer.toString(new Integer(type) + i);
+                    List<Resource> resourceList = getResourceData.getData(category, type, point, sort, pageNum, keyword);
+
+                    resourceList.forEach((item) -> {
+                        item.setCategoryId(categoryId);
+                        item.setPosition("E://test//");
+                        item.setCheckStatus(1);
+                        if (!item.getSuffixName().equals(".unkonw")) {
+                            //写入到数据库中
+                            resourceService.uploadResource(item);
+                            //创建文件
+                            File file = new File("E://test//" + item.getTitle() + item.getSuffixName());
+                            if (!file.exists())
+                                try {
+                                    file.createNewFile();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                        }
+                    });
+                }
+            }
+
+        }
+
+        return "success!";
+    }
 
     @RequestMapping("/hello")
     public String hello() {
