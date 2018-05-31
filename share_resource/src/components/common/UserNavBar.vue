@@ -29,10 +29,7 @@
                     <Icon type="stats-bars"></Icon>
                     我的收藏
             </MenuItem>
-            <MenuItem name="my-remark">
-                    <Icon type="stats-bars"></Icon>
-                    我的评论
-            </MenuItem>
+            
             <Submenu name="my-account">
                 <template slot="title">
                     <Icon type="stats-bars"></Icon>

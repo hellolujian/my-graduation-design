@@ -78,6 +78,7 @@
             </el-table-column>
             <el-table-column
                 label="资源名称"
+                :show-overflow-tooltip="true"
                 prop="name">
             </el-table-column>
             <el-table-column
@@ -120,19 +121,7 @@
                         size="small"
                         type="primary">已审核
                     </el-button>
-                    
-<!--
-                    <el-switch
-                        on-text="通过"
-                        off-text="已审核"
-                        :width=75
-                        :disabled="scope.row.checkStatus === 1 ? true : false"
-                        v-model="scope.row.checkStatus === 0 ? true : false"
-                        on-color="#13ce66"
-                        off-color="#ff4949"
-                        @change="switchChange(scope.$index, scope.row)">
-                    </el-switch>
--->
+
                 </template>
                 
             </el-table-column>
@@ -210,8 +199,9 @@
             handleCurrentChange(val){
                 this.page = val;
             },
+            //审核通过
             agree(index,row) {
-                let url = `/resources/update/${row.id}`;
+                let url = `/resources/update2/${row.id}`;
                 let params = {
                     checkStatus: row.checkStatus == 0 ? 1 : 0,
                 }
@@ -225,6 +215,7 @@
                         }
                         //未审核数量减一
                         this.tabPane[1].count--;
+                        
                         this.$message.success('审核成功')
                     } else {
                         this.$message.error('审核失败');
@@ -249,8 +240,18 @@
                                 message: '删除成功',
                                 showClose: true
                             });
-                            this.getResourceData();
-                            this.tabPane[1].count--;
+                            
+                            if(this.activeName == 'second') {
+                                this.resourceData.splice(index,1);
+                                var notCheckData = this.resourceData.filter(function(item) {
+                                    return item.checkStatus == 0;
+                                });
+                                console.log(notCheckData)
+                                this.resourceData = notCheckData;
+                                this.tabPane[1].count--;
+                            } else {
+                                this.getResourceData();
+                            }
                         } else {
                             this.$message({
                                 type: 'error',
@@ -269,34 +270,11 @@
                 });
                 
             },
-            /*
-            switchChange(index,row) {
-                let url = `/resources/update/${row.id}`;
-                let params = {
-                    checkStatus: row.checkStatus == 0 ? 1 : 0,
-                }
-                postRequest(url,params).then(response => {
-                    
-                    if (isSuccess(response.data.code)) {
-                        if (row.checkStatus == 1) {
-                            row.checkStatus = 0;
-                        } else {
-                            row.checkStatus = 1
-                        }
-                        this.$message.success('通过')
-                    } else {
-                        this.$message.error('审核失败');
-                    }  
-                },response => {
-                    //console.log(response)
-                    this.$message.error('找不到服务器')
-                })
-                
-            }
-            */
+            
            tabClick(val) {
                //index为0表示选中第一个tab
                //alert(this.activeName)
+               this.activeName = val.name;
                if(val.index == 1) {
                    //过滤函数
                    var notCheckData = this.tableData.filter(function(item) {

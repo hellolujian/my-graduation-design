@@ -163,6 +163,7 @@
                             username: self.formInline.username,
                             password: self.formInline.password,
                         };
+                        //如果是登录
                         if(self.loginClick) {
                             getRequest(self.loginUrl, params).then(response => {
                                 let userInfo = response.data.data;
@@ -181,6 +182,7 @@
                                 }
                             }); 
                         }
+                        //否则是注册
                         else {
                             if(this.agree) {
                                 postRequest(self.registerUrl, params).then(response => {

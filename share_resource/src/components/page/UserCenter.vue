@@ -291,7 +291,7 @@
 
             //上传成功
             uploadSuccess() {
-                alert('s')
+                //alert('s')
                 this.getResourceData(this.getMyResourceUrl);
                 this.getMyUpload(this.getMyResourceUrl);
             },

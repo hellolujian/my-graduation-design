@@ -1,5 +1,9 @@
 <template>
     <div class="wrapper">
+        <audio
+            ref="notice"
+            src="/static/mp3/song.mp3">
+        </audio>
         <v-head></v-head>
         <v-sidebar></v-sidebar>
         <div class="content">
@@ -27,6 +31,7 @@ export default {
     methods: {
         websocketConnection() {
             var websocket = null;
+            var _this = this;
             if('WebSocket' in window){
                 websocket = new WebSocket('ws://localhost:8082/websocket');
             }else {
@@ -42,6 +47,7 @@ export default {
                 console.log('收到消息：'+event.data);
                 //弹窗提醒，
                 alert('有消息来了！')
+                _this.$refs.notice.play();
             }
             websocket.onerror = function(){
                 alert('websocket通信发生错误！')

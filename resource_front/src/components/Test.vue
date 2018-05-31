@@ -1,6 +1,12 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
+    <audio 
+      ref="notice"
+      id="notice2"
+      src="/static/mp3/song.mp3">
+    </audio>
+    <div style="width:100px;height:100px;border:1px solid red;"></div>
   </div>
 </template>
 
@@ -18,7 +24,10 @@ export default {
     var _this = this;
       getRequest("/hello").then(resp=> {
         _this.msg = resp.data;
-      })
+      });
+      this.$refs.notice.play();
+      console.log(this.$refs.notice)
+      
   }
 }
 </script>
