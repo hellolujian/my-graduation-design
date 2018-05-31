@@ -7,9 +7,11 @@ import cn.edu.ujs.entity.Resource;
 import cn.edu.ujs.entity.User;
 import cn.edu.ujs.enums.DownloadEnum;
 import cn.edu.ujs.enums.UploadEnum;
+import cn.edu.ujs.mapper.UserMapper;
 import cn.edu.ujs.service.*;
 import cn.edu.ujs.util.FileUtil;
 import cn.edu.ujs.util.ResultVOUtil;
+import cn.edu.ujs.websocket.WebSocket;
 import com.sun.corba.se.impl.orbutil.DenseIntMapImpl;
 import com.sun.deploy.net.HttpResponse;
 import org.slf4j.Logger;
@@ -213,6 +215,16 @@ public class CommonServiceImpl implements CommonService {
         map.put("points",user.getPoints());
         map.put("uploadCount",resourceService.getResourceCountByUserId(user.getId()));
         return map;
+    }
+
+    @Override
+    public boolean checkResourcePass(Integer resourceId) {
+        Resource resource = resourceService.findByResourceId(resourceId);
+        // TODO: 2018/5/30 修改，不能直接写1
+        resource.setCheckStatus(1);
+        //更新用户积分
+        userService.addUserPoints(resource.getUserId(),resource.getPoints());
+        return true;
     }
 
     private List<ResourceVO> getResourceByIdList(List<Integer> resourceIdList) {

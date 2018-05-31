@@ -35,4 +35,7 @@ public interface CommonService {
 
     /**根据资源获取用户信息*/
     public Map<String,Object> getResourceOwnerUserInfo(Integer resourceId);
+
+    /**审核通过*/
+    public boolean checkResourcePass(Integer resourceId);
 }

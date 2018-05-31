@@ -6,7 +6,9 @@ import cn.edu.ujs.entity.Resource;
 import cn.edu.ujs.enums.ResourceEnum;
 import cn.edu.ujs.service.CommonService;
 import cn.edu.ujs.service.ResourceService;
+import cn.edu.ujs.service.UserService;
 import cn.edu.ujs.util.ResultVOUtil;
+import cn.edu.ujs.websocket.WebSocket;
 import com.github.pagehelper.PageHelper;
 import com.sun.xml.internal.ws.api.config.management.Reconfigurable;
 import org.slf4j.Logger;
@@ -40,6 +42,12 @@ public class ResourceController {
 
     @Autowired
     private CommonService commonService;
+
+    @Autowired
+    private WebSocket webSocket;
+
+    @Autowired
+    private UserService userService;
 
     //获取所有资源
     @GetMapping(value = "/")
@@ -139,6 +147,8 @@ public class ResourceController {
         ResultVO resultVO = commonService.uploadResource(filePath,file,resource);
         //将上传记录写入上传表
         resourceService.uploadResource(resource);
+        //通知管理员审核
+        webSocket.sendMessage("有用户上传新的资源了，快去审核吧！");
         return resultVO;
     }
 
@@ -185,6 +195,31 @@ public class ResourceController {
         resource.setTagList(tagList);
         resource.setDescription(description);
         resource.setCheckStatus(checkStatus);
+        if (resourceService.updateResource(resource) != null)
+            resultVO = ResultVOUtil.success(resource);
+        else
+            resultVO = ResultVOUtil.error(ResourceEnum.UPDATE_ERROR.getCode(),
+                    ResourceEnum.UPDATE_ERROR.getMessage());
+        return resultVO;
+    }
+
+    //编辑资源
+    @RequestMapping(value = "/update2/{resourceId}")
+    public ResultVO updateResource2(@RequestParam(value = "typeId", required = false) Integer typeId,
+                                   @RequestParam(value = "categoryId", required = false) Integer categoryId,
+                                   @RequestParam(value = "tagList", required = false) List<String> tagList,
+                                   @RequestParam(value = "description", required = false) String description,
+                                   @RequestParam(value = "checkStatus", required = false) Integer checkStatus,
+                                   @PathVariable(value = "resourceId") Integer resourceId) {
+
+        ResultVO resultVO = null;
+        Resource resource = resourceService.findByResourceId(resourceId);
+        resource.setTypeId(typeId);
+        resource.setCategoryId(categoryId);
+        resource.setTagList(tagList);
+        resource.setDescription(description);
+        resource.setCheckStatus(checkStatus);
+        userService.addUserPoints(resource.getUserId(),resource.getPoints());
         if (resourceService.updateResource(resource) != null)
             resultVO = ResultVOUtil.success(resource);
         else
@@ -242,6 +277,18 @@ public class ResourceController {
                     }
                 }
         }
+    }
+
+    // TODO: 2018/5/30 xiugai
+    @RequestMapping(value = "/pass/{resourceId}")
+    public ResultVO resourcePass(@PathVariable(value = "resourceId") Integer resourceId,
+                                 @RequestParam(value = "checkStatus", required = false) Integer checkStatus) {
+        boolean result = commonService.checkResourcePass(resourceId);
+        if (result) {
+            return ResultVOUtil.success(null);
+        }
+        else return ResultVOUtil.error(ResourceEnum.UPDATE_ERROR.getCode(),
+                                       ResourceEnum.UPDATE_ERROR.getMessage());
     }
 
 // TODO: 2018/3/19 应该将为未审核的放进视图里，方便前台一次性获取，而不用查询整个表 

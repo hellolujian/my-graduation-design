@@ -79,5 +79,9 @@ public interface UserMapper {
     //更新用户积分
     @Update("update user set points=#{point} where id=#{userId}")
     Integer updatePoints(@Param("userId") Integer userId,
-                                @Param("point") Integer point);
+                         @Param("point") Integer point);
+
+    @Update("update user set points=#{point}+points where username=#{username}")
+    Integer updatePointsByUsername(@Param("username") String username,
+                                   @Param("point") Integer point);
 }
