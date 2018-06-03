@@ -9,8 +9,8 @@ resource_front是后台管理系统界面，share_front是用户端界面，分�
   cnpm install
   cnpm run dev
   ```
-- 打开浏览器，输入以下地址：
-  *后台管理系统*：`localhost:8000`  
-  *用户端&：`localhost:9000'  
+- 打开浏览器，输入以下地址：  
+*后台管理系统*：`localhost:8000`  
+*用户端*：`localhost:9000'  
   
 
