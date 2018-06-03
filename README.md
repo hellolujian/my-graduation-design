@@ -4,3 +4,9 @@
 - 部署后端项目
   后端代码放在resource_management中，导入至IDEA中，即可运行。
 - 部署前端项目
+resource_front是后台管理系统界面，share_front是用户端界面，分别进入项目根目录，执行以下命令：
+```
+cnpm install
+cnpm run dev
+```
+
