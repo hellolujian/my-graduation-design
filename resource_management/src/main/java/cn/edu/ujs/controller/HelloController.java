@@ -52,7 +52,6 @@ public class HelloController {
                           @PathVariable(value = "sort") String sort,
                           @PathVariable(value = "pageNum") String pageNum) {
 
-
         GetResourceData getResourceData = new GetResourceData();
         //List<Resource> resourceList = getResourceData.getData("0","10","0","0","1");
         List<Map<String,Object>> list = childCategoryMapper.findAll();

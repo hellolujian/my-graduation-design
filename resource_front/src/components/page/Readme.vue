@@ -3,11 +3,11 @@
         <div class="ms-doc">
             <h3>README.md</h3>
             <article>
-                <h1>library-reservation-manage-system</h1>
+                <h1>Design and Implementation of online library management system</h1>
                 <p>基于Vue.js 2.x系列 + Element UI + Echarts 的后台管理系统</p>
                 <h2>前言</h2>
-                <p>图书馆座位经常会出现不合理的使用情况，平时人少的时候，座位比较多，可以找到座位，但是期末复习大家用的比较多，所以开发一套座位预约管理系统还是有必要的</p>
-                <p>本套系统是图书馆座位预约的后台管理系统，实现了基本的增删改查功能，统计分析，当然还有许多功能未完善，后续会继续改进，争取做好</p>
+                <p></p>
+                <p></p>
                 <h2>功能</h2>
                 <br>
                 <el-checkbox disabled checked>登录/注销</el-checkbox>
