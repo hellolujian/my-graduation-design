@@ -44,6 +44,10 @@ public class HelloController {
         return "websocket";
     }
 
+    @GetMapping
+    public void comeFromMaster() {
+
+    }
 
     @RequestMapping("/data/{category}/{type}/{point}/{sort}/{pageNum}")
     public String getData(@PathVariable(value = "category") String category,
